@@ -1,13 +1,12 @@
 name: Generate QR Codes
 on: [push]
-
 jobs:
   generate-qr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
-      # Create minimal HTML page
+      # Create minimal HTML page with EXACT text formatting
       - name: Create HTML page
         run: |
           cat > calcium-carbonate.html <<EOF
@@ -18,42 +17,26 @@ jobs:
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>JMSB Calcium Carbonate</title>
             <style>
-              body { 
-                font-family: Arial, sans-serif; 
-                max-width: 600px; 
-                margin: 20px auto; 
-                padding: 20px;
-                line-height: 1.6;
-              }
-              h1 { color: #2c3e50; }
-              .contact { 
-                background: #f8f9fa;
+              body {
+                font-family: system-ui, -apple-system, sans-serif;
+                max-width: 500px;
+                margin: 20px auto;
                 padding: 15px;
-                border-radius: 8px;
-                margin-top: 20px;
+                line-height: 1.5;
+                color: #333;
+              }
+              .main-line {
+                font-size: 1.3em;
+                font-weight: bold;
+                margin-bottom: 15px;
               }
             </style>
           </head>
           <body>
-            <h1>Calcium Carbonate Powder</h1>
-            <p>JMSB manufactures high-quality Calcium Carbonate Powder from Lime Stone.</p>
-            
-            <h2>Agricultural Benefits</h2>
-            <p>Our Calcium Carbonate serves as a natural fertilizer and soil amendment that:</p>
-            <ul>
-              <li>Corrects acidic soil (low pH)</li>
-              <li>Supports plant growth and health</li>
-              <li>Enhances nutrient absorption</li>
-            </ul>
-            
-            <p>Lime stone has been a cornerstone of agriculture for centuries, yet many remain unaware of Calcium Carbonate's hidden benefits for soil and plant health.</p>
-            
-            <div class="contact">
-              <h3>Contact Us</h3>
-              <p>Email JMSB for technical specifications and pricing information.</p>
-              <!-- Add your actual email below -->
-              <p>Email: <a href="mailto:info@jmsb-example.com">info@jmsb-example.com</a></p>
-            </div>
+            <div class="main-line">JMSB Manufacture Calcium Carbonate Powder from Lime Stone.</div>
+            <p>Calcium Carbonate use for agriculture soil is a natural fertilizer that works as a soil amendment to soil acidic (low PH) to support plant growth and health.</p>
+            <p>Lime stone has been a cornerstone of agriculture for centuries and many of us still do not know the hidden benefits of Calcium Carbonate for soil and plant.</p>
+            <p>Email JMSB for further information.</p>
           </body>
           </html>
           EOF
@@ -62,22 +45,19 @@ jobs:
       - name: Generate QR Code
         run: |
           pip install qrcode[pil]
+          # Automatically generate GitHub Pages URL
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          PAGE_URL="https://$GITHUB_REPOSITORY_OWNER.github.io/$REPO_NAME/calcium-carbonate.html"
           python -c "
           import qrcode
-          
-          # Use your actual GitHub Pages URL structure:
-          # https://<username>.github.io/<repository>/calcium-carbonate.html
-          page_url = 'https://YOUR_USERNAME.github.io/${GITHUB_REPOSITORY##*/}/calcium-carbonate.html'
-          
           qr = qrcode.QRCode(
               version=1,
               error_correction=qrcode.constants.ERROR_CORRECT_L,
               box_size=10,
               border=4,
           )
-          qr.add_data(page_url)
+          qr.add_data('$PAGE_URL')
           qr.make(fit=True)
-          
           img = qr.make_image(fill_color='black', back_color='white')
           img.save('calcium-carbonate-qr.png')
           "
