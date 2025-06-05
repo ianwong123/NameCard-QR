@@ -5,27 +5,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Generate QR Code with Text Message
+      - name: Generate QR Code with GitHub Pages URL
         run: |
           pip install qrcode[pil]
           python -c "
           import qrcode
           
-          # Your message text
-          message = '''**JMSB Manufacture Calcium Carbonate Powder from Lime Stone.**
-
-          Calcium Carbonate use for agriculture soil is a natural fertilizer that works as a soil amendment to soil acidic (low PH) to support plant growth and health.
-          Lime stone has been a cornerstone of agriculture for centuries and many of us still do not know the hidden benefits of Calcium Carbonate for soil and plant.
-          Email JMSB for further information.'''
+          # URL to your GitHub Pages site
+          github_pages_url = 'https://${{ github.repository_owner }}.github.io/NameCard-QR/'
           
-          # Create QR code with the message
+          # Create QR code with your GitHub Pages URL
           qr = qrcode.QRCode(
               version=1,
               error_correction=qrcode.constants.ERROR_CORRECT_L,
               box_size=10,
               border=4,
           )
-          qr.add_data(message)
+          qr.add_data(github_pages_url)
           qr.make(fit=True)
           
           # Create and save the QR code image
