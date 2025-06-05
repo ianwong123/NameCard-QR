@@ -5,27 +5,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Generate QR Code with Text Message
+      - name: Generate QR Code with vCard
         run: |
           pip install qrcode[pil]
           python -c "
           import qrcode
           
-          # Text Message
-          message = '''**JMSB Manufacture Calcium Carbonate Powder from Lime Stone.**
-
-          Calcium Carbonate use for agriculture soil is a natural fertiliser that works as a soil amendment to soil acidic (low PH) to support plant growth and health.
-          Lime stone has been a cornerstone of agriculture for centuries and many of us still do not know the hidden benefits of Calcium Carbonate for soil and plant.
-          Email JMSB for further information.'''
+          # vCard format for better mobile compatibility
+          vcard = '''BEGIN:VCARD
+          VERSION:3.0
+          ORG:JMSB
+          TITLE:Calcium Carbonate Manufacturer
+          NOTE:JMSB Manufacture Calcium Carbonate Powder from Lime Stone.\n\nCalcium Carbonate use for agriculture soil is a natural fertiliser that works as a soil amendment to soil acidic (low PH) to support plant growth and health.\n\nLime stone has been a cornerstone of agriculture for centuries and many of us still do not know the hidden benefits of Calcium Carbonate for soil and plant.\n\nEmail JMSB for further information.
+          END:VCARD'''
           
-          # Create QR code with message
+          # Create QR code with vCard
           qr = qrcode.QRCode(
               version=1,
               error_correction=qrcode.constants.ERROR_CORRECT_L,
               box_size=10,
               border=4,
           )
-          qr.add_data(message)
+          qr.add_data(vcard)
           qr.make(fit=True)
           
           # Create and save the QR code image
