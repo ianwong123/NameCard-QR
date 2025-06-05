@@ -38,6 +38,16 @@
             font-weight: bold;
             color: #2c5aa0;
         }
+        .email-link {
+            color: #2c5aa0;
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s;
+        }
+        .email-link:hover {
+            border-bottom: 2px solid #2c5aa0;
+        }
     </style>
 </head>
 <body>
@@ -51,8 +61,19 @@
         <p>Lime stone has been a cornerstone of agriculture for centuries and many of us still do not know the hidden benefits of Calcium Carbonate for soil and plant.</p>
         
         <div class="contact">
-            Email JMSB for further information.
+            <span class="email-link" onclick="contactUs()">
+                📧 Email JMSB for further information
+            </span>
         </div>
     </div>
+
+    <script>
+    function contactUs() {
+
+        const encodedEmail = 'am1zYkBqYXlhdHJhZGUuY29tLm15';
+        const email = atob(encodedEmail);
+        window.location.href = 'mailto:' + email;
+    }
+    </script>
 </body>
 </html>
