@@ -1,13 +1,54 @@
 name: Generate QR Codes
 on: [push]
+
 jobs:
   generate-qr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
-      # Create minimal HTML page with EXACT text formatting
-      - name: Create HTML page
+      # Create minimal index.html (landing page)
+      - name: Create index.html
+        run: |
+          cat > index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>JMSB Products</title>
+            <style>
+              body { 
+                font-family: Arial, sans-serif; 
+                max-width: 600px; 
+                margin: 20px auto; 
+                padding: 20px;
+                line-height: 1.6;
+                text-align: center;
+              }
+              .product-link {
+                display: block;
+                margin: 25px 0;
+                padding: 15px;
+                background: #f0f8ff;
+                border-radius: 8px;
+                text-decoration: none;
+                color: #0066cc;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>JMSB Products</h1>
+            <a href="calcium-carbonate.html" class="product-link">
+              Calcium Carbonate Powder
+            </a>
+          </body>
+          </html>
+          EOF
+
+      # Create calcium-carbonate.html (your exact content)
+      - name: Create product page
         run: |
           cat > calcium-carbonate.html <<EOF
           <!DOCTYPE html>
@@ -41,11 +82,11 @@ jobs:
           </html>
           EOF
 
-      # Generate QR code for GitHub Pages URL
+      # Generate QR code
       - name: Generate QR Code
         run: |
           pip install qrcode[pil]
-          # Automatically generate GitHub Pages URL
+          # Auto-generate GitHub Pages URL
           REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           PAGE_URL="https://$GITHUB_REPOSITORY_OWNER.github.io/$REPO_NAME/calcium-carbonate.html"
           python -c "
@@ -70,7 +111,6 @@ jobs:
           publish_dir: ./
           publish_branch: gh-pages
           keep_files: true
-          exclude_assets: "*.yml,*.png"
 
       - name: Upload QR Code
         uses: actions/upload-artifact@v4
